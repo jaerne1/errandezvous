@@ -882,3 +882,106 @@ p {
 .modal--sos .modal__header h2 {
   font-size: 17px;
 }
+
+/* ---------- Auth ---------- */
+
+.app-shell__signout {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.auth-screen {
+  justify-content: center;
+  padding: 24px 20px;
+  gap: 28px;
+}
+
+.auth-screen__header {
+  text-align: center;
+}
+
+.auth-screen__header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--teal-dark);
+  letter-spacing: -0.02em;
+}
+
+.auth-screen__header p {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.auth-tabs {
+  display: flex;
+  background: var(--paper);
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 18px;
+}
+
+.auth-tabs__btn {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 9px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.auth-tabs__btn--active {
+  background: var(--card);
+  color: var(--teal-dark);
+  box-shadow: var(--shadow);
+}
+
+.auth-message {
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin: -2px 0 0;
+}
+
+.auth-message--error {
+  background: var(--coral-light);
+  color: var(--coral-dark);
+}
+
+.auth-message--notice {
+  background: var(--teal-light);
+  color: var(--teal-dark);
+}
+
+/* ---------- Task list status ---------- */
+
+.task-list__status {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.task-list__error {
+  margin: 0 20px 12px;
+}
+
+.task-card__posted {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}

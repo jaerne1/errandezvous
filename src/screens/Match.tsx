@@ -1,35 +1,90 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Heart, X, RotateCcw } from "lucide-react";
-import { matchCandidates } from "../data/mockData";
 import { Avatar } from "../components/Avatar";
 import { TaskIcon, TASK_LABELS } from "../components/TaskIcon";
+import { getColorForId, getInitials } from "../lib/avatar";
+import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/AuthContext";
+import type { MatchCandidate, TaskType } from "../types";
 
 type Direction = "like" | "pass" | null;
 
+interface CandidateRow {
+  id: string;
+  type: TaskType;
+  title: string;
+  time_window: string;
+  poster: { id: string; name: string } | { id: string; name: string }[];
+}
+
+function normalizeCandidate(row: CandidateRow): MatchCandidate {
+  const poster = Array.isArray(row.poster) ? row.poster[0] : row.poster;
+  return {
+    taskId: row.id,
+    poster: { id: poster.id, name: poster.name },
+    task: { type: row.type, title: row.title, timeWindow: row.time_window },
+  };
+}
+
 export function Match() {
+  const { user } = useAuth();
+  const [candidates, setCandidates] = useState<MatchCandidate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
   const [lastAction, setLastAction] = useState<Direction>(null);
   const [matched, setMatched] = useState<string | null>(null);
 
-  const candidate = matchCandidates[index];
-  const isDone = index >= matchCandidates.length;
+  const loadCandidates = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("id, type, title, time_window, poster:profiles(id, name)")
+      .neq("poster_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(20);
 
-  const handleAction = (direction: Direction) => {
-    if (!candidate) return;
-    setLastAction(direction);
-    if (direction === "like") {
-      setMatched(candidate.name);
-      setTimeout(() => setMatched(null), 1800);
+    if (error) {
+      setError(error.message);
+    } else {
+      setError(null);
+      setCandidates((data as CandidateRow[]).map(normalizeCandidate));
+      setIndex(0);
     }
+    setLoading(false);
+  }, [user]);
+
+  useEffect(() => {
+    loadCandidates();
+  }, [loadCandidates]);
+
+  const candidate = candidates[index];
+  const isDone = index >= candidates.length;
+
+  const handleAction = async (direction: Direction) => {
+    if (!candidate || !user) return;
+    setLastAction(direction);
+
+    if (direction === "like") {
+      const { error } = await supabase.from("matches").insert({
+        task_id: candidate.taskId,
+        user_a: user.id,
+        user_b: candidate.poster.id,
+        status: "matched",
+      });
+      if (error) {
+        setError(error.message);
+      } else {
+        setMatched(candidate.poster.name);
+        setTimeout(() => setMatched(null), 1800);
+      }
+    }
+
     setTimeout(() => {
       setLastAction(null);
       setIndex((i) => i + 1);
     }, 180);
-  };
-
-  const reset = () => {
-    setIndex(0);
-    setLastAction(null);
   };
 
   return (
@@ -41,6 +96,8 @@ export function Match() {
         </div>
       </header>
 
+      {error && <p className="auth-message auth-message--error task-list__error">{error}</p>}
+
       <div className="match-stage">
         {matched && (
           <div className="match-toast">
@@ -48,16 +105,18 @@ export function Match() {
           </div>
         )}
 
-        {!isDone && candidate ? (
+        {loading ? (
+          <p className="screen__subtitle">Loading task buddies...</p>
+        ) : !isDone && candidate ? (
           <div className={`match-card ${lastAction ? `match-card--${lastAction}` : ""}`}>
-            <div className="match-card__photo" style={{ backgroundColor: candidate.photoColor }}>
-              <span>{candidate.initials}</span>
+            <div
+              className="match-card__photo"
+              style={{ backgroundColor: getColorForId(candidate.poster.id) }}
+            >
+              <span>{getInitials(candidate.poster.name)}</span>
             </div>
             <div className="match-card__info">
-              <h2>
-                {candidate.name}, {candidate.age}
-              </h2>
-              <p className="match-card__bio">{candidate.bio}</p>
+              <h2>{candidate.poster.name}</h2>
               <div className="match-card__task">
                 <div className="match-card__task-icon">
                   <TaskIcon type={candidate.task.type} size={18} />
@@ -75,19 +134,27 @@ export function Match() {
             <Avatar color="#264653" initials="✓" size={56} />
             <h2>You're all caught up</h2>
             <p>No more task buddies nearby right now. Check back soon.</p>
-            <button className="btn btn--secondary" onClick={reset}>
-              <RotateCcw size={16} /> Start over
+            <button className="btn btn--secondary" onClick={loadCandidates}>
+              <RotateCcw size={16} /> Refresh
             </button>
           </div>
         )}
       </div>
 
-      {!isDone && candidate && (
+      {!loading && !isDone && candidate && (
         <div className="match-actions">
-          <button className="match-actions__btn match-actions__btn--pass" onClick={() => handleAction("pass")} aria-label="Pass">
+          <button
+            className="match-actions__btn match-actions__btn--pass"
+            onClick={() => handleAction("pass")}
+            aria-label="Pass"
+          >
             <X size={26} />
           </button>
-          <button className="match-actions__btn match-actions__btn--like" onClick={() => handleAction("like")} aria-label="Like">
+          <button
+            className="match-actions__btn match-actions__btn--like"
+            onClick={() => handleAction("like")}
+            aria-label="Like"
+          >
             <Heart size={24} />
           </button>
         </div>

@@ -1,26 +1,24 @@
 export type TaskType = "grocery" | "dryClean" | "doctor" | "errand" | "pharmacy" | "petStore";
 
+export interface Profile {
+  id: string;
+  name: string;
+}
+
 export interface Task {
   id: string;
   type: TaskType;
   title: string;
+  location: string;
   timeWindow: string;
-  distance: string;
-  note: string;
-  poster: {
-    name: string;
-    photoColor: string;
-    initials: string;
-  };
+  note: string | null;
+  createdAt: string;
+  poster: Profile;
 }
 
 export interface MatchCandidate {
-  id: string;
-  name: string;
-  age: number;
-  photoColor: string;
-  initials: string;
-  bio: string;
+  taskId: string;
+  poster: Profile;
   task: {
     type: TaskType;
     title: string;
@@ -36,7 +34,14 @@ export interface ChecklistItem {
 
 export interface ChatMessage {
   id: string;
-  sender: "me" | "them";
-  text: string;
-  time: string;
+  matchId: string;
+  senderId: string;
+  body: string;
+  createdAt: string;
+}
+
+export interface ActiveMatch {
+  id: string;
+  taskTitle: string;
+  otherUser: Profile;
 }
