@@ -1,7 +1,7 @@
 :root {
-  --teal: #2a9d8f;
-  --teal-dark: #21807a;
-  --teal-light: #e3f2f0;
+  --teal: #008e97;
+  --teal-dark: #00747d;
+  --teal-light: #e5f4f5;
   --coral: #e76f51;
   --coral-dark: #d15b3e;
   --coral-light: #fbe9e3;
@@ -742,7 +742,7 @@ p {
   margin: 0 20px;
   height: 220px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, #dceee9 0%, #cfe7e0 100%);
+  background: linear-gradient(135deg, #e0f1f3 0%, #cce8ea 100%);
   position: relative;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -751,8 +751,8 @@ p {
 .map-placeholder__grid {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(42, 157, 143, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(42, 157, 143, 0.14) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(0, 142, 151, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 142, 151, 0.14) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
@@ -777,7 +777,7 @@ p {
 .map-placeholder__pin--them {
   top: 30%;
   left: 60%;
-  box-shadow: 0 0 0 6px rgba(42, 157, 143, 0.2);
+  box-shadow: 0 0 0 6px rgba(0, 142, 151, 0.2);
   border-radius: 50%;
 }
 
@@ -807,13 +807,13 @@ p {
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(42, 157, 143, 0.5);
+    box-shadow: 0 0 0 0 rgba(0, 142, 151, 0.5);
   }
   70% {
-    box-shadow: 0 0 0 7px rgba(42, 157, 143, 0);
+    box-shadow: 0 0 0 7px rgba(0, 142, 151, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(42, 157, 143, 0);
+    box-shadow: 0 0 0 0 rgba(0, 142, 151, 0);
   }
 }
 

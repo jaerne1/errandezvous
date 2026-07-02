@@ -53,7 +53,7 @@ export function CheckIn() {
       </div>
 
       {sosSent && (
-        <div className="sos-confirmation">SOS alert sent. Your emergency contact and TaskMate support have been notified.</div>
+        <div className="sos-confirmation">SOS alert sent. Your emergency contact and Errandevous support have been notified.</div>
       )}
 
       <button className="sos-btn" onClick={() => setSosOpen(true)}>
@@ -71,7 +71,7 @@ export function CheckIn() {
               </button>
             </div>
             <p className="modal__body-text">
-              This will immediately notify your emergency contact and TaskMate support with your live
+              This will immediately notify your emergency contact and Errandevous support with your live
               location.
             </p>
             <div className="modal__actions">

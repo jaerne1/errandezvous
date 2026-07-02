@@ -36,8 +36,8 @@ export function AuthScreen() {
   return (
     <div className="screen auth-screen">
       <div className="auth-screen__header">
-        <h1>TaskMate</h1>
-        <p className="screen__subtitle">Errand company, one task at a time.</p>
+        <h1>Errandevous</h1>
+        <p className="screen__subtitle">Make everyday life an adventure.</p>
       </div>
 
       <div className="auth-card">
